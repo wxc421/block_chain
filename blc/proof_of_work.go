@@ -38,7 +38,7 @@ func (pow *ProofOfWork) Run() ([]byte, int64) {
 		}
 		nonce++
 	}
-	slog.Info("碰撞次数:%v", slog.Attr{
+	slog.Info("碰撞次数", slog.Attr{
 		Key:   "nonce",
 		Value: slog.Int64Value(nonce),
 	})

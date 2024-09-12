@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"encoding/binary"
+	"encoding/gob"
 	"log/slog"
 	"time"
 )
@@ -46,6 +47,30 @@ func (b *Block) SetHash() {
 
 	hash := sha256.Sum256(bs)
 	b.Hash = hash[:]
+}
+
+func (b *Block) Serialize() []byte {
+	var (
+		buffer = bytes.Buffer{}
+	)
+
+	encoder := gob.NewEncoder(&buffer)
+
+	if err := encoder.Encode(b); err != nil {
+		slog.Warn("serialize block", "err", err)
+		return nil
+	}
+	return buffer.Bytes()
+}
+
+func DeSerialize(data []byte) *Block {
+	b := &Block{}
+	decoder := gob.NewDecoder(bytes.NewReader(data))
+	if err := decoder.Decode(b); err != nil {
+		slog.Warn("deserialize block", "err", err)
+		return nil
+	}
+	return b
 }
 
 func IntToHex(data int64) []byte {

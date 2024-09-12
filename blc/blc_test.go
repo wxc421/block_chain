@@ -1,7 +1,6 @@
 package blc
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -39,13 +38,13 @@ func TestNewBlock(t *testing.T) {
 
 func TestBlock_Hash(t *testing.T) {
 	blockChain := NewBlockChain()
-	lastBlock := blockChain.LastBlock()
-	blockChain.AddBlock(NewBlock(lastBlock.Hash, lastBlock.Height+1, []byte("alice send 10 btc to bob")))
+	defer blockChain.Close()
+	blockChain.AddBlock([]byte("alice send 10 btc to bob"))
 
-	lastBlock = blockChain.LastBlock()
-	blockChain.AddBlock(NewBlock(lastBlock.Hash, lastBlock.Height+1, []byte("bob send 5 btc to alice")))
+	blockChain.AddBlock([]byte("alice send 10 btc to bob"))
+	blockChain.PrintBlockChain()
 
-	for _, block := range blockChain.Blocks {
-		fmt.Printf("prevHash:%x,currentHash:%x\n", block.PrevHash, block.Hash)
-	}
+	// for _, block := range blockChain.Blocks {
+	// 	fmt.Printf("prevHash:%x,currentHash:%x\n", block.PrevHash, block.Hash)
+	// }
 }
